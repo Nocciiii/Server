@@ -37,12 +37,12 @@ public class Client
 		try
 		{
 			echoSocket = new Socket(hostName, Integer.parseInt(gui.getTextField_1().getText()));
-			out = new PrintWriter(echoSocket.getOutputStream(),true);
-			in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			stdln=new BufferedReader(new InputStreamReader(System.in));
+			//out = new PrintWriter(echoSocket.getOutputStream(),true);
+			//in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+			//stdln=new BufferedReader(new InputStreamReader(System.in));
 			
-			String pruefen=in.readLine();
-			System.out.println(pruefen);
+			//String pruefen=in.readLine();
+			//System.out.println(pruefen);
 		}
 		catch(UnknownHostException e)
 		{
@@ -53,7 +53,7 @@ public class Client
 			System.out.println("IO-Verbindung zu "+ hostName +" ist fehlgeschlagen");
 		}
 	}
-	public void abschicken()
+	/*public void abschicken()
 	{
 		userInput=gui.getTextField().getText();
 		out.println(userInput);
@@ -66,5 +66,5 @@ public class Client
 		{
 			System.out.println("IO-Verbindung zu "+ hostName +" ist fehlgeschlagen");
 		}
-	}
+	}*/
 }

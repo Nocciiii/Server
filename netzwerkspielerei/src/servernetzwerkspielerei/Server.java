@@ -41,7 +41,7 @@ public class Server extends Thread
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		while(!isInterrupted())
+		while(!isInterrupted() && socket != null)
 		{
 			try
 			{				
@@ -68,8 +68,9 @@ public class Server extends Thread
 			}
 			catch(InterruptedException e)
 			{
-				interrupt();
-				out.println("Ciao umu");
+				System.out.println("Ciao umu");
+				
+				
 				try
 				{
 					//in.close();
@@ -80,6 +81,8 @@ public class Server extends Thread
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				socket = null;
+				interrupt();
 			}
 			
 		}

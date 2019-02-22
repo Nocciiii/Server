@@ -28,14 +28,17 @@ public class Controller
 	}
 	public void start(int portNumber)
 	{
-		this.server = new Thread (new Server(portNumber,this));
+		this.server = new Server(portNumber,this);
+
 		server.start();
 
-		server.interrupt();
+		
 		gui.getBtnStart().setEnabled(false);
 	}
 	public void killgil(int portNumber)
 	{
-		// System.out.println("leb wohl du grausame Welt");
+		server.interrupt();
+		gui.getBtnStart().setEnabled(true);
+		System.out.println("leb wohl du grausame Welt");
 	}
 }

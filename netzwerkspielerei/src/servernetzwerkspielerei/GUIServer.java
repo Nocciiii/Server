@@ -86,3 +86,4 @@ public class GUIServer extends JFrame
 		return btnKillgil;
 	}
 }
+
