@@ -1,5 +1,6 @@
 package servernetzwerkspielerei;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,17 +9,21 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 
+
 public class Server extends Thread
 {
-	private ServerSocket socket;
-	private Socket clientSocket;
+	private ServerSocket serversocket;
 	private PrintWriter out;
 	private BufferedReader in;
 	private int portNumber;
 	private Controller c;
+	private ClientProxy proxy;
+	private ArrayList<ClientProxy> liste=new ArrayList<ClientProxy>();
+	private int i=0;
 	
 	public Server(int portNumber, Controller c)
 	{
@@ -31,7 +36,7 @@ public class Server extends Thread
 	{
 		try
 		{
-			socket = new ServerSocket(portNumber);
+			serversocket = new ServerSocket(portNumber);
 			Thread.currentThread().setName(String.valueOf(portNumber));
 			System.out.println(Thread.currentThread().getName());
 			c.getListModel().addElement(portNumber+"läuft");
@@ -41,20 +46,17 @@ public class Server extends Thread
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		while(!isInterrupted() && socket != null)
+		while(!isInterrupted() && serversocket != null)
 		{
 			try
 			{				
-				socket.setSoTimeout(100);
-				clientSocket=socket.accept();
-				/*out = new PrintWriter(clientSocket.getOutputStream(),true);
-				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				out.println("Verbindung erfolgreich");
-				String inputLine;
-				while((inputLine=in.readLine())!= null)
-				{
-					out.println(inputLine);
-				}*/
+				serversocket.setSoTimeout(100);
+				Socket clientSocket = serversocket.accept();
+				getListe().add(new ClientProxy(clientSocket, this));
+				clientSocket=null;
+				
+				
+
 				Thread.sleep(100);
 			}
 			catch (SocketTimeoutException e)
@@ -68,24 +70,31 @@ public class Server extends Thread
 			}
 			catch(InterruptedException e)
 			{
-				System.out.println("Ciao umu");
-				
-				
-				try
-				{
-					//in.close();
-					//out.close();
-					socket.close();
-				} catch (IOException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				socket = null;
 				interrupt();
 			}
 			
 		}
+		try
+		{
+			serversocket.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
+	public void schreiben(String nachricht)
+	{
+		for(ClientProxy p : getListe())
+		{
+			p.schreiben(nachricht);
+		}
+	}
+	public ArrayList<ClientProxy> getListe()
+	{
+		return liste;
+	}
+
 
 }

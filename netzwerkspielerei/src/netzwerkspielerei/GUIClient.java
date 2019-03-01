@@ -40,7 +40,7 @@ public class GUIClient extends JFrame
 			textField = new JTextField();
 			textField.setBounds(20, 230, 388, 20);
 			textField.setColumns(10);
-			//textField.addActionListener(e->getClient().abschicken());
+			textField.addActionListener(e->getClient().abschicken());
 		}
 		return textField;
 	}

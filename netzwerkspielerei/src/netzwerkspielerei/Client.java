@@ -11,15 +11,14 @@ import javax.swing.DefaultListModel;
 
 public class Client
 {
-	String hostName;
-	int portNumber;
-	Socket echoSocket;
-	PrintWriter out;
-	BufferedReader in;
-	BufferedReader stdln;
-	String userInput;
-	GUIClient gui;
-	DefaultListModel listmodel;
+	private String hostName;
+	private Socket echoSocket;
+	private PrintWriter out;
+	private String userInput;
+	private GUIClient gui;
+	private DefaultListModel<String> listmodel;
+	private ClientListenThread listen;
+	
 	public static void main(String[] args) throws IOException
 	{
 		new Client();
@@ -27,8 +26,8 @@ public class Client
 	public Client()
 	{
 		gui=new GUIClient(this);
-		gui.getList().setModel(listmodel = new DefaultListModel());
-		gui.setVisible(true);
+		getGui().getList().setModel(listmodel = new DefaultListModel<String>());
+		getGui().setVisible(true);
 		
 	}
 	public void verbinden()
@@ -37,12 +36,9 @@ public class Client
 		try
 		{
 			echoSocket = new Socket(hostName, Integer.parseInt(gui.getTextField_1().getText()));
-			//out = new PrintWriter(echoSocket.getOutputStream(),true);
-			//in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			//stdln=new BufferedReader(new InputStreamReader(System.in));
+			out = new PrintWriter(echoSocket.getOutputStream(),true);
+			listen = new ClientListenThread(this, echoSocket);
 			
-			//String pruefen=in.readLine();
-			//System.out.println(pruefen);
 		}
 		catch(UnknownHostException e)
 		{
@@ -53,18 +49,24 @@ public class Client
 			System.out.println("IO-Verbindung zu "+ hostName +" ist fehlgeschlagen");
 		}
 	}
-	/*public void abschicken()
+	public void abschicken()
 	{
-		userInput=gui.getTextField().getText();
+		userInput=getGui().getTextField().getText();
 		out.println(userInput);
 		out.flush();
-		try
-		{
-			listmodel.addElement(in.readLine());
-		}
-		catch(IOException e)
-		{
-			System.out.println("IO-Verbindung zu "+ hostName +" ist fehlgeschlagen");
-		}
-	}*/
+	}
+	
+	public GUIClient getGui()
+	{
+		return gui;
+	}
+	public DefaultListModel<String> getListModel()
+	{
+		return listmodel;
+	}
+	
+	public ClientListenThread getListen()
+	{
+		return this.listen;
+	}
 }

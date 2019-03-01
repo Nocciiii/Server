@@ -6,7 +6,7 @@ import javax.swing.DefaultListModel;
 
 public class Controller
 {
-	private GUIServer gui;
+	private GUIController gui;
 	private DefaultListModel listmodel;
 	private Server s;
 	private Thread server;
@@ -17,7 +17,7 @@ public class Controller
 	}
 	public Controller()
 	{
-		gui=new GUIServer(this);
+		gui=new GUIController(this);
 		gui.setVisible(true);
 		gui.getList().setModel(listmodel=new DefaultListModel());
 	}
@@ -31,14 +31,10 @@ public class Controller
 		this.server = new Server(portNumber,this);
 
 		server.start();
-
-		
-		gui.getBtnStart().setEnabled(false);
 	}
 	public void killgil(int portNumber)
 	{
 		server.interrupt();
-		gui.getBtnStart().setEnabled(true);
 		System.out.println("leb wohl du grausame Welt");
 	}
 }
